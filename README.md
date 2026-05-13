@@ -1,3 +1,10 @@
+---
+title: root README.md file
+last updated: 5/13/2026
+tags: documentation, update, taxonomy, rules, project
+summary: brief description of organization knowledge hub along with repository rules
+---
+
 # knowledge-hub
 
 Repository to team information. Also serves as a testbed for Github Organization features, allowing the team to hit the ground running with the class project.
@@ -25,15 +32,21 @@ Repository to team information. Also serves as a testbed for Github Organization
 - Project folders must contain a subfolder for every large submodule.
   - A large submodule is defined as a component, technical or otherwise, that requires its own unique set of documentation material (e.g. 'front-end').
 - Project documentation must be located within the appropriate subfolder.
-  - Documentation may only be composed of .md and .svg files.
+  - Documentation may only be composed of '.gitkeep', '.md' and '.svg' files.
 - Pull Requests adhere to the following requirements before approval:
-  - Reviewer is required.
-  - CI checks must be passed. (aspirational)
-- All files and folders beside 'README.md', 'AGENTS.md' and 'CODEOWNERS' must adhere to kebab-case.
+  - Code owner review is required.
+  - CI checks must be passed.
+- All files and folders beside 'README.md', 'AGENTS.md', '.gitkeep' and 'CODEOWNERS' must adhere to kebab-case.
+- All '.md' files must have a YAML frontmatter with the following entries (e.g. 'README.md'):
+  - title
+  - last-updated
+  - tags
+  - summary
+
 
 ## Branching Rules
 - The use of feature branches is mandatory. 
 - All branches must come have main as the origin. 
 
 ## Ownership Model
-- Ownership is strict; every team member may only make changes to their assigned files. (aspirational)
+- Ownership is strict; every team member may only make changes to their assigned files or have a code owner review their changes.
