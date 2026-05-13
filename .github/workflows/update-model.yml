@@ -1,0 +1,193 @@
+name: Enforce Update Model
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  enforce-update-model:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Enforce Update Model rules
+        shell: bash
+        run: |
+          set -euo pipefail
+          shopt -s nullglob dotglob
+
+          #
+          # ─────────────────────────────────────────────────────────────
+          #  CENTRALIZED CONFIGURATION
+          # ─────────────────────────────────────────────────────────────
+          #
+          allowed_root_files=(README.md AGENTS.md CODEOWNERS)
+          allowed_root_dirs=(.github .git)
+          research_roots=(personal-research research)
+          allowed_doc_exts=(md svg)
+          exempt_names=(README.md AGENTS.md CODEOWNERS .gitkeep)
+          kebab_regex='^[a-z0-9]+(-[a-z0-9]+)*([.][a-z0-9]+(-[a-z0-9]+)*)?$'
+
+          fail=0
+
+          #
+          # ─────────────────────────────────────────────────────────────
+          #  HELPER FUNCTIONS
+          # ─────────────────────────────────────────────────────────────
+          #
+
+          is_exempt() {
+            local name="$1"
+            [[ " ${exempt_names[*]} " =~ " $name " ]]
+          }
+
+          is_research_root() {
+            local name="$1"
+            [[ " ${research_roots[*]} " =~ " $name " ]]
+          }
+
+          is_allowed_root_file() {
+            local name="$1"
+            [[ " ${allowed_root_files[*]} " =~ " $name " ]]
+          }
+
+          is_allowed_root_dir() {
+            local name="$1"
+            [[ " ${allowed_root_dirs[*]} " =~ " $name " ]]
+          }
+
+          is_kebab_case() {
+            local name="$1"
+            [[ "$name" =~ $kebab_regex ]]
+          }
+
+          error() {
+            echo "::error file=$1::$2"
+            fail=1
+          }
+
+          #
+          # ─────────────────────────────────────────────────────────────
+          #  1. TOP‑LEVEL VALIDATION
+          # ─────────────────────────────────────────────────────────────
+          #
+          echo "Checking top-level entries..."
+
+          for entry in ./*; do
+            name="$(basename "$entry")"
+
+            [[ "$name" == .* ]] && continue
+
+            if [[ -f "$entry" ]]; then
+              if ! is_allowed_root_file "$name" && ! is_kebab_case "$name"; then
+                error "$entry" "Root file '$name' must use kebab-case."
+              fi
+
+            elif [[ -d "$entry" ]]; then
+              if ! is_allowed_root_dir "$name"; then
+                if ! is_kebab_case "$name"; then
+                  error "$entry" "Top-level directory '$name' must use kebab-case."
+                fi
+
+                if ! is_research_root "$name" && [[ ! -f "$entry/README.md" ]]; then
+                  error "$entry/README.md" "Project directory '$name' must contain a README.md."
+                fi
+              fi
+            fi
+          done
+
+          #
+          # ─────────────────────────────────────────────────────────────
+          #  2. RESEARCH ROOT RULES
+          # ─────────────────────────────────────────────────────────────
+          #
+          echo "Checking research roots..."
+
+          for root in "${research_roots[@]}"; do
+            [[ -d "$root" ]] || continue
+
+            for item in "$root"/*; do
+              [[ -e "$item" ]] || continue
+              name="$(basename "$item")"
+
+              [[ "$name" == .* ]] && continue
+
+              if [[ -f "$item" ]]; then
+                error "$item" "Files cannot live directly inside '$root'. Use a personal subfolder."
+              fi
+            done
+          done
+
+          #
+          # ─────────────────────────────────────────────────────────────
+          #  3. PROJECT DOCUMENTATION RULES
+          # ─────────────────────────────────────────────────────────────
+          #
+          echo "Checking project documentation..."
+
+          for proj in ./*; do
+            [[ -d "$proj" ]] || continue
+            proj_name="$(basename "$proj")"
+
+            is_allowed_root_dir "$proj_name" && continue
+            is_research_root "$proj_name" && continue
+
+            # Project root may only contain README.md or .gitkeep
+            for item in "$proj"/*; do
+              [[ -e "$item" ]] || continue
+              name="$(basename "$item")"
+
+              if [[ -f "$item" ]] && ! is_exempt "$name"; then
+                error "$item" "Project root '$proj_name' may only contain README.md; move other files into subfolders."
+              fi
+            done
+
+            # Validate documentation file extensions
+            find "$proj" -type f | while read -r file; do
+              name="$(basename "$file")"
+
+              is_exempt "$name" && continue
+
+              ext="${name##*.}"
+              if [[ ! " ${allowed_doc_exts[*]} " =~ " $ext " ]]; then
+                error "$file" "Documentation files must use .md or .svg extensions."
+              fi
+            done
+          done
+
+          #
+          # ─────────────────────────────────────────────────────────────
+          #  4. GLOBAL KEBAB‑CASE VALIDATION
+          # ─────────────────────────────────────────────────────────────
+          #
+          echo "Checking kebab-case naming..."
+
+          find . \
+            -path './.git*' -prune -o \
+            -path './.github*' -prune -o \
+            -print |
+          while read -r path; do
+            [[ "$path" == "." ]] && continue
+            name="$(basename "$path")"
+
+            [[ "$name" == .* ]] && continue
+            is_exempt "$name" && continue
+
+            if ! is_kebab_case "$name"; then
+              error "$path" "File and directory names must use kebab-case."
+            fi
+          done
+
+          #
+          # ─────────────────────────────────────────────────────────────
+          #  FINAL RESULT
+          # ─────────────────────────────────────────────────────────────
+          #
+          if [[ "$fail" -ne 0 ]]; then
+            echo "Update Model validation failed."
+            exit 1
+          fi
+
+          echo "Update Model validation passed."
