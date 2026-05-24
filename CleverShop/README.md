@@ -1,7 +1,11 @@
 ---
 title: CleverShop README.md file
-last updated: 5/24/2026
-tags: documentation, CleverShip, principles, design
+updated: 5/24/2026
+tags:
+- documentation
+- CleverShip
+- principles
+- design
 summary: brief description of the CleverShop project, including design principles
 ---
 

@@ -1,7 +1,12 @@
 ---
 title: root README.md file
-last updated: 5/13/2026
-tags: documentation, update, taxonomy, rules, project
+updated: 5/13/2026
+tags: 
+  - documentation
+  - update
+  - taxonomy
+  - rules
+  - project
 summary: brief description of organization knowledge hub along with repository rules
 ---
 
@@ -39,7 +44,7 @@ Repository to team information. Also serves as a testbed for Github Organization
 - All files and folders beside 'README.md', 'AGENTS.md', '.gitkeep' and 'CODEOWNERS' must adhere to kebab-case.
 - All '.md' files must have a YAML frontmatter with the following entries (e.g. 'README.md'):
   - title
-  - last-updated
+  - updated
   - tags
   - summary
 
