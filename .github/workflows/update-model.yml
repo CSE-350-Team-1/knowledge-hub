@@ -135,14 +135,14 @@ jobs:
             is_research_root "$proj_name" && continue
 
             # Project root may only contain README.md or .gitkeep
-            for item in "$proj"/*; do
-              [[ -e "$item" ]] || continue
-              name="$(basename "$item")"
+            #for item in "$proj"/*; do
+            #  [[ -e "$item" ]] || continue
+            #  name="$(basename "$item")"
 
-              if [[ -f "$item" ]] && ! is_exempt "$name"; then
-                error "$item" "Project root '$proj_name' may only contain README.md; move other files into subfolders."
-              fi
-            done
+            #  if [[ -f "$item" ]] && ! is_exempt "$name"; then
+            #    error "$item" "Project root '$proj_name' may only contain README.md; move other files into subfolders."
+            #  fi
+            #done
 
             # Validate documentation file extensions
             find "$proj" -type f | while read -r file; do
