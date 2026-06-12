@@ -48,8 +48,8 @@ See the diagram in [backendDesign.svg](backendDesign.svg).
 3. The kernel sends that data to the relevant optional service.
 4. The service returns structured results.
 5. The kernel merges those results with the rest of the response and sends it to the frontend.
-When a user creates an account, the frontend sends the details to the kernel, the kernel checks the input and stores the account if it is valid, and then it returns the result.
 
+When a user creates an account, the frontend sends the details to the kernel, the kernel checks the input and stores the account if it is valid, and then it returns the result.
 When a user logs in, the kernel checks the stored account record, compares the password hash, and creates a session ID if the login is valid.
 
 When the frontend asks for list data, it sends the session ID in the authorization header, the kernel checks that session, fetches the user data from the database, applies the business rules, and returns the formatted result.
