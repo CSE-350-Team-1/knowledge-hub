@@ -9,13 +9,13 @@ To ensure a secure experience for all users, strict RBAC is to be applied at all
 
 - **Manager**
   - Modify own account
-  - Manipulate all user accounts' lists
+  - Manipulate all user account lists
   - Add user accounts
   - Delete user accounts
 
 - **Admin**
   - Modify own account
-  - Manipulate all user accounts' lists
+  - Manipulate all user account lists
   - Add user accounts
   - Delete user accounts
   - Add manager accounts
