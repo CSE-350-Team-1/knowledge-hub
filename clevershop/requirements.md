@@ -31,21 +31,21 @@ Listed below are functional requirements expected for initial release.
     * User selects items to add, as opposed to typing them out
 - Purchase record
     * User can mark list items as purchased
+- User data in the backend
+    * User data is saved in a remote server as much as safety allows
+- Mandatory login
+    * Web application cannot be used without an account. User must be logged in
+      
+## Non-functional requirements
+
+Listed below are non-functional requirements expected for intial release.
+
 - Database hoster
     * Service to host program database
 - Container hoster
     * Service to host program containers
 - Domain
     * Suitable domain for program frontend
-
-## Non-functional requirements
-
-Listed below are non-functional requirements expected for intial release.
-
-- User data in the backend
-    * User data is saved in a remote server as much as safety allows
-- Mandatory login
-    * Web application cannot be used without an account. User must be logged in
 
 ## Deferred requirements
 
