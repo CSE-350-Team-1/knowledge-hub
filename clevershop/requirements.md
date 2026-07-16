@@ -38,11 +38,11 @@ Listed below are non-functional requirements expected for intial release.
 
 - User data in the backend
     * User data is saved in a remote server as much as safety allows
-- Database hoster
+- Database host
     * Service to host program database
-- Container hoster
+- Container host
     * Service to host program containers
-- Domain
+- Frontend host
     * Suitable domain for program frontend
 
 ## Deferred requirements
