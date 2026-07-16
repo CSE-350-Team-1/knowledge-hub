@@ -19,7 +19,7 @@ This document details functional, non-functional, and deferred requirements for 
 
 Listed below are functional requirements expected for initial release.
 
-- User login system
+- User account system
     * User can create, access, modify, and delete their account
 - Grocery list display
     * User can view grocery list
